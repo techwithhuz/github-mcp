@@ -1,0 +1,10 @@
+apiVersion: kagent.dev/v1alpha1
+kind: ToolServer
+metadata:
+  name: github-mcp-url
+  namespace: kagent
+spec:
+  description: github-mcp-url
+  config:
+    sse:
+      url: http://mcp-github-server.kagent.svc.cluster.local:8080/sse

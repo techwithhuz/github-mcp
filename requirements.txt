@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+requests
+dspy
+pydantic
+httpx
+openai
+click
+mcp
