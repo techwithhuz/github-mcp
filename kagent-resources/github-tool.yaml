@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-github-server
+  namespace: default
+  labels:
+    app: mcp-github-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-github-server
+  template:
+    metadata:
+      labels:
+        app: mcp-github-server
+    spec:
+      containers:
+        - name: mcp-github-server
+          image: techwithhuz/github-mcp-server:latest
+          env:
+           - name: GITHUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: github-token-secret
+              key: GITHUB_TOKEN
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-github-server
+  namespace: default
+spec:
+  selector:
+    app: mcp-github-server
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP
