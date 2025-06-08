@@ -1,24 +1,38 @@
-# GitHub MCP Server
+# GitHub MCP Server for KAgent
 
-This repository contains a GitHub MCP-compatible server implementation designed to work with the [Kagent](https://github.com/kagentai/kagent) framework. It enables GitHub automation workflows such as pull request creation, issue tracking, branch operations, and more exposed via an SSE-compatible MCP toolserver.
+This repository contains the code and Kubernetes resources for running a GitHub-compatible [MCP](https://github.com/docker/mcp) server. It is designed to integrate with [KAgent](https://github.com/kubeframe/kagent), enabling AI agents to interact with GitHub and perform developer automation tasks like creating pull requests.
 
+---
 
 ## Features
 
-- SSE-based MCP server for GitHub operations  
-- Supports:
-  - Creating pull requests
-  - Creating issues
-  - Creating and pushing new branches
-  - Cloning repositories
-- Built-in FastAPI endpoints (for testing)
-- Compatible with Kagent's `ToolServer` CRD
-- Kubernetes-ready (Docker + Deployment manifests)
+- SSE-based communication with KAgent.
+- Tools implemented:
+  - `create_pr`: Create GitHub pull requests.
+  - `create_branch`: Create a new branch in the repository.
+  - `push_file`: Push Terraform files or any file to a repo.
+  - `clone_repo`: Clone and inspect the repository.
+- Secure authentication via GitHub personal access token.
+- Packaged as a container and deployed on Kubernetes.
 
 ---
 
+## Terraform Agent (GCP)
 
----
+This project is extended by a **Terraform AI Agent** that connects to this GitHub MCP server and automates Terraform-based GCP infrastructure provisioning. The agent:
+
+- Creates `.tf` files for GCP using best practices.
+- Automatically commits and opens a pull request to [this repo](https://github.com/techwithhuz/gcp-terraform).
+- Responds only with the **GitHub PR URL**, without any extra output.
+- Handles creation of:
+  - VPCs, subnets
+  - e2-micro VM instances in `us-central1-a`
+  - SSH firewall rules
+  - Required API enablement
+  - Resource labels (`creator = gcp-terraform-agent`)
+
+This agent works by calling the `create_branch`, `push_file`, and `create_pr` tools exposed by the MCP server.
+
 
 ## How to Use
 
